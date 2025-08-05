@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RRC6KX7EQQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RRC6KX7EQQ');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIXERA - Professional DJ Controllers</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@0.292.0/dist/lucide-react.js"></script>
+
+    <style>
+        :root {
+            --brand-color: #A259FF;
+            --brand-color-dark: #8e4de6;
+            --background-dark: #0d1117;
+            --background-light: #161b22;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #848d97;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+        }
+
+        /* Custom font for the logo */
+        .font-bitcount {
+            font-family: 'Bitcount Prop Single', sans-serif;
+        }
+
+        .bg-brand { background-color: var(--brand-color); }
+        .text-brand { color: var(--brand-color); }
+        .border-brand { border-color: var(--brand-color); }
+        .hover\:bg-brand-dark:hover { background-color: var(--brand-color-dark); }
+        .ring-brand:focus { --tw-ring-color: var(--brand-color); }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.7s ease-out forwards; }
+        
+        .feature-card {
+            background-color: var(--background-light);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(162, 89, 255, 0.1), 0 8px 10px -6px rgba(162, 89, 255, 0.1);
+        }
+
+        .animated {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animated[data-animation="fade-in-up"] {
+            transform: translateY(40px);
+        }
+
+        .animated.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        /* Aspect-ratio for chart */
+        .aspect-ratio-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        }
+
+        .aspect-ratio-container > canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Table styling */
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: var(--background-light);
+            border-bottom: 2px solid var(--brand-color);
+        }
+        .comparison-table td {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        /* AI Chat Styles */
+        #chat-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            background-color: var(--background-light);
+        }
+        #chat-messages {
+            background-color: var(--background-dark);
+        }
+        .chat-message {
+            max-width: 80%;
+        }
+        .chat-message.user {
+            background-color: var(--brand-color);
+            color: white;
+        }
+        .chat-message.ai {
+            background-color: var(--background-light);
+            border: 1px solid var(--border-color);
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-background-dark/80 backdrop-blur-sm sticky top-0 z-50 border-b border-border-color">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Updated Logo: Added new font and split for coloring -->
+            <a href="#" class="nav-link font-bitcount text-3xl" data-page="home">
+                <span class="text-white italic">MIX</span><span class="text-brand italic">ERA</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="nav-link text-text-primary hover:text-brand transition-colors" data-page="home">Home</a>
+                <a href="#" class="nav-link text-text-primary hover:text-brand transition-colors" data-page="about">About</a>
+                <a href="#" class="nav-link text-text-primary hover:text-brand transition-colors" data-page="products">Products</a>
+                <a href="#" class="nav-link text-text-primary hover:text-brand transition-colors" data-page="downloads">Downloads</a>
+                <a href="#" class="nav-link text-text-primary hover:text-brand transition-colors" data-page="contact">Contact</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-text-primary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+            <a href="#" class="nav-link block text-text-primary hover:text-brand" data-page="home">Home</a>
+            <a href="#" class="nav-link block text-text-primary hover:text-brand" data-page="about">About</a>
+            <a href="#" class="nav-link block text-text-primary hover:text-brand" data-page="products">Products</a>
+            <a href="#" class="nav-link block text-text-primary hover:text-brand" data-page="downloads">Downloads</a>
+            <a href="#" class="nav-link block text-text-primary hover:text-brand" data-page="contact">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page-section active fade-in">
+            <div class="min-h-[70vh] flex items-center bg-grid-pattern">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4 font-bitcount">Pro-Level DJ Controllers.<span class="block text-brand">Accessible to Everyone.</span></h2>
+                    <p class="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto mb-8">High-end features, motorized components, and a sturdy aluminum design for under 1000€. Assembled in Germany.</p>
+                    <a href="https://gofund.me/ef04ee20" target="_blank" class="bg-brand text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-brand-dark transition-transform transform hover:scale-105">Support us on GoFundMe</a>
+                    <p class="mt-6 text-sm text-text-secondary">First 100 orders get a <span class="font-bold text-white">FREE</span> flight case!</p>
+                </div>
+            </div>
+            <div class="py-16 sm:py-24 bg-background-light">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12 animated" data-animation="fade-in">
+                        <h3 class="text-3xl font-bold text-white">Engineered for Performance</h3>
+                        <p class="text-text-secondary mt-2">No compromises. Just the features you need to elevate your mix.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Motorized Jog Wheels</h4><p class="text-text-secondary">Vinyl-like tactile feedback for precision scratching and beatmatching.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 100ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Full-Color Touch Screens</h4><p class="text-text-secondary">Navigate libraries, view waveforms, and control effects with ease.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 200ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M2 12h2"/><path d="M20 12h2"/><path d="m18.36 5.64-.9.9"/><path d="m6.54 17.46-.9.9"/><path d="m12 6 3.5 3.5"/><path d="m12 18 3.5-3.5"/><path d="m6.54 6.54.9.9"/><path d="m17.46 17.46.9.9"/></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Motorized Faders</h4><p class="text-text-secondary">Automated, touch-sensitive faders for accurate level mixing.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 300ms;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Sturdy Aluminum Body</h4><p class="text-text-secondary">A robust, road-worthy chassis assembled and tested in Germany.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 400ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Open-Source Software</h4><p class="text-text-secondary">Total freedom to customize mappings, features, and functionality, compatible with software like <strong>Mixxx</strong>.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 500ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Right to Repair</h4><p class="text-text-secondary">Easily repairable with accessible manuals and affordable parts.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 600ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20V16"/></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Dedicated FX Section</h4><p class="text-text-secondary">Hands-on control over software effects with knobs and buttons.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 700ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><path d="M12 12v-2a4 4 0 0 0-4-4H4"/><path d="M12 12h2a4 4 0 0 1 4 4v4"/><path d="M12 12h2a4 4 0 0 0 4-4V4"/><path d="M12 12v2a4 4 0 0 1-4 4H4"/></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Everything USB-C</h4><p class="text-text-secondary">Modern, reliable, single-cable connectivity for power and data.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 800ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect><line x1="22" y1="11" x2="22" y2="13"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="10" y1="12" x2="10" y2="12"></line><line x1="14" y1="12" x2="14" y2="12"></line></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">DJ Anywhere</h4><p class="text-text-secondary">Small controllers have a built-in battery. Pro models get an external powerbank for DJing anywhere.</p>
+                        </div>
+                        <div class="feature-card p-6 rounded-xl animated" data-animation="fade-in-up" style="transition-delay: 900ms;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-brand mb-4"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                            <h4 class="text-xl font-bold text-white mb-2">Budget-Friendly Quality</h4><p class="text-text-secondary">Your budget shouldn't limit your creativity. We use high-quality components to deliver professional gear for less.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Comparison Section with Table -->
+            <div class="py-16 sm:py-24 bg-background-dark">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12 animated" data-animation="fade-in">
+                        <h3 class="text-3xl font-bold text-white">The Price and Specs of Professional Gear</h3>
+                        <p class="text-text-secondary mt-2">See how the MIXERA CTRL one compares to some of the most popular controllers on the market.</p>
+                    </div>
+                    <div class="max-w-5xl mx-auto overflow-x-auto rounded-lg border border-border-color animated" data-animation="fade-in-up">
+                        <table class="w-full comparison-table">
+                            <thead>
+                                <tr class="text-text-primary text-sm font-bold uppercase tracking-wider">
+                                    <th class="rounded-tl-lg">Model</th>
+                                    <th>Price</th>
+                                    <th>Jog Wheels</th>
+                                    <th>Display</th>
+                                    <th>Faders</th>
+                                    <th class="rounded-tr-lg">Body</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-text-secondary">
+                                    <td class="font-bold text-white whitespace-nowrap">Mixera CTRL one</td>
+                                    <td class="font-bold text-brand whitespace-nowrap">~999€</td>
+                                    <td>Motorized</td>
+                                    <td>Full-Color Touch</td>
+                                    <td>Motorized</td>
+                                    <td>Aluminum</td>
+                                </tr>
+                                <tr class="text-text-secondary">
+                                    <td class="font-semibold text-white whitespace-nowrap">Pioneer DDJ-1000 SRT</td>
+                                    <td class="whitespace-nowrap">~1.599€</td>
+                                    <td>Static (Mechanical)</td>
+                                    <td>Color Jog Display</td>
+                                    <td>Static</td>
+                                    <td>Aluminum/Plastic</td>
+                                </tr>
+                                <tr class="text-text-secondary">
+                                    <td class="font-semibold text-white whitespace-nowrap">Pioneer DDJ-800</td>
+                                    <td class="whitespace-nowrap">~999€</td>
+                                    <td>Static (Mechanical)</td>
+                                    <td>Color Jog Display</td>
+                                    <td>Static</td>
+                                    <td>Aluminum/Plastic</td>
+                                </tr>
+                                <tr class="text-text-secondary">
+                                    <td class="font-semibold text-white whitespace-nowrap">NI Traktor S4 MK3</td>
+                                    <td class="whitespace-nowrap">~999€</td>
+                                    <td>Motorized</td>
+                                    <td>Color Jog Display</td>
+                                    <td>Static</td>
+                                    <td>Plastic</td>
+                                </tr>
+                                <tr class="text-text-secondary">
+                                    <td class="font-semibold text-white whitespace-nowrap">Denon DJ SC LIVE 4</td>
+                                    <td class="whitespace-nowrap">~1.299€</td>
+                                    <td>Static (Mechanical)</td>
+                                    <td>Multi-Touch Screen</td>
+                                    <td>Static</td>
+                                    <td>Plastic</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-12 text-center text-text-secondary max-w-3xl mx-auto">
+                        <p>We believe that high-quality, professional DJ equipment shouldn't be a luxury. The Mixera CTRL one delivers flagship-level features like motorized platters and faders at a price point that is accessible to everyone.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rising Price Trend Section with Graph -->
+            <div class="py-16 sm:py-24 bg-background-light">
+                <div class="container mx-auto px-6 text-center">
+                    <h3 class="text-3xl font-bold text-white animated" data-animation="fade-in">The Rising Price of DJ Controllers</h3>
+                    <p class="text-text-secondary mt-2 max-w-2xl mx-auto animated" data-animation="fade-in">Professional-grade controllers have become increasingly expensive over the last decade. This chart illustrates a typical price trend for flagship models, showing a consistent upward trajectory.</p>
+                    <div class="max-w-4xl mx-auto mt-12 bg-background-dark p-6 rounded-xl border border-border-color animated" data-animation="fade-in-up">
+                        <div class="aspect-ratio-container">
+                            <canvas id="priceTrendChart"></canvas>
+                        </div>
+                        <div class="text-text-secondary text-sm mt-4">
+                            <p>*Chart is illustrative and based on a hypothetical trend of professional controller pricing over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Other page sections (About, Products, etc.) -->
+        <section id="about" class="page-section fade-in"><div class="container mx-auto px-6 py-16 sm:py-24"><div class="max-w-4xl mx-auto text-center"><h2 class="text-4xl font-extrabold text-white">From a Passion Project to a Mission.</h2><p class="text-xl text-brand font-semibold mt-2">Founded by a 17-year-old student in Germany.</p></div><div class="max-w-3xl mx-auto mt-8 text-lg text-text-secondary space-y-6 text-left md:text-center"><p>MIXERA was born from a simple idea: what if professional-grade DJ equipment was actually affordable? My name is Lino, and as a student and aspiring DJ, I was frustrated by the high prices of top-tier controllers. The gear with the best features always seemed just out of reach.</p><p>I decided to change that. I started designing and prototyping in my spare time, driven by a passion for both music and technology. My goal was to build a controller that I would want to use—one with no compromises on features, build quality, or feel.</p><p>This GoFundMe campaign is the next step in making that vision a reality. The funds will go directly into producing the first batch of controllers, all of which will be carefully assembled and tested right here in Germany. Thank you for believing in this project and helping to empower the next generation of DJs.</p></div></div></section>
+        <section id="products" class="page-section fade-in"><div class="container mx-auto px-6 py-16 sm:py-24 text-center"><h2 class="text-4xl font-extrabold text-white">The Future of Your Mix is Coming.</h2><p class="text-xl text-brand font-semibold mt-2">Our first controller is in the final stages of prototyping.</p><div class="max-w-2xl mx-auto mt-8 p-8 bg-background-light rounded-2xl border border-border-color"><h3 class="text-2xl font-bold text-white">MIXERA CTRL one</h3><p class="text-text-secondary mt-4">The MIXERA CTRL one will be a 4-channel controller featuring all the professional hardware we've promised: motorized jog wheels, a central touch screen for waveform display and effects control, long-throw motorized pitch faders, and a robust aluminum chassis.</p><p class="text-text-secondary mt-4">Full specs, images, and pre-order information will be available here soon.</p></div><div class="mt-12"><h4 class="text-xl font-bold text-white">Be the first to know.</h4><p class="text-text-secondary mt-2">Sign up for updates and launch notifications.</p><form class="mt-4 flex flex-col sm:flex-row justify-center max-w-md mx-auto gap-3"><input type="email" placeholder="info@mixera.pro" class="w-full px-4 py-3 rounded-lg bg-background-light border border-border-color text-white focus:outline-none focus:ring-2 ring-brand" required><button type="submit" class="bg-brand text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark transition-colors">Notify Me</button></form></div></div></section>
+        <section id="downloads" class="page-section fade-in"><div class="container mx-auto px-6 py-16 sm:py-24 text-center"><h2 class="text-4xl font-extrabold text-white">Open-Source Hub</h2><p class="text-xl text-brand font-semibold mt-2">Software, Manuals, and More.</p><div class="max-w-3xl mx-auto mt-8 text-lg text-text-secondary space-y-6"><p>This is where you'll find everything you need to get the most out of your MIXERA gear. After launch, we will host our open-source software, drivers, firmware updates, and detailed repair manuals here.</p><p>Our commitment to open source means you'll be able to customize, contribute, and help shape the future of the MIXERA ecosystem.</p></div></div></section>
+        <section id="contact" class="page-section fade-in"><div class="container mx-auto px-6 py-16 sm:py-24"><div class="text-center"><h2 class="text-4xl font-extrabold text-white">Get in Touch</h2><p class="text-xl text-text-secondary mt-2">We'd love to hear from you.</p></div><div class="max-w-lg mx-auto mt-12 text-center bg-background-light p-8 rounded-xl border border-border-color"><p class="text-text-secondary">For questions, press inquiries, or partnership ideas, please don't hesitate to reach out.</p><a href="mailto:info@mixera.pro" class="mt-6 inline-block text-2xl font-bold text-brand hover:text-white transition-colors">info@mixera.pro</a><p class="text-text-secondary text-sm mt-8">Please note that it can take up to 3 days to get a reply</p></div></div></section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-background-light border-t border-border-color">
+        <div class="container mx-auto px-6 py-8 text-center text-text-secondary">
+            <p>&copy; 2024 MIXERA. All rights reserved. Assembled in Germany.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chat Widget -->
+    <div id="chat-widget" class="fixed bottom-5 right-5">
+        <button id="chat-bubble" class="bg-brand w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-dark transition-transform transform hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="m3 21 1.65-3.8a9 9 0 1 1 3.42 2.9l-5.07.9z"></path></svg>
+        </button>
+    </div>
+
+    <div id="chat-container" class="fixed bottom-24 right-5 w-96 bg-background-light rounded-xl shadow-2xl border border-border-color hidden flex-col opacity-0 -translate-y-2">
+        <div class="p-4 border-b border-border-color flex justify-between items-center">
+            <h3 class="font-bold text-white">MIXERA AI Assistant</h3>
+            <button id="close-chat" class="text-text-secondary hover:text-white">&times;</button>
+        </div>
+        <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto h-80">
+            <!-- AI Greeting -->
+            <div class="chat-message ai self-start rounded-lg p-3">
+                <p>Hello! I'm the MIXERA AI assistant. Ask me anything about our products, features, or the GoFundMe campaign!</p>
+            </div>
+        </div>
+        <div class="p-4 border-t border-border-color">
+            <div class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask a question..." class="w-full px-4 py-2 rounded-lg bg-background-light border border-border-color text-white focus:outline-none focus:ring-2 ring-brand" autocomplete="off">
+                <button id="send-chat" class="bg-brand text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark transition-colors">&uarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Page navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+
+            function showPage(pageId) {
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.add('active');
+                }
+                window.scrollTo(0, 0);
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.dataset.page;
+                    showPage(pageId);
+                    // Close mobile menu on navigation
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Price Trend Chart
+            const ctx = document.getElementById('priceTrendChart').getContext('2d');
+            const priceTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2014', '2016', '2018', '2020', '2022', '2024'],
+                    datasets: [{
+                        label: 'Average Price of Flagship Controllers',
+                        data: [800, 950, 1100, 1300, 1500, 1600],
+                        backgroundColor: 'rgba(162, 89, 255, 0.1)',
+                        borderColor: 'rgba(162, 89, 255, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(162, 89, 255, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(162, 89, 255, 1)',
+                        tension: 0.4,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '€' + value;
+                                },
+                                color: '#e6edf3'
+                            },
+                            grid: {
+                                color: 'var(--border-color)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#e6edf3'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'var(--background-light)',
+                            titleColor: 'var(--text-primary)',
+                            bodyColor: 'var(--text-secondary)',
+                            borderColor: 'var(--border-color)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // AI Chat Widget Logic
+            const chatBubble = document.getElementById('chat-bubble');
+            const chatContainer = document.getElementById('chat-container');
+            const closeChat = document.getElementById('close-chat');
+            const chatInput = document.getElementById('chat-input');
+            const sendChat = document.getElementById('send-chat');
+            const chatMessages = document.getElementById('chat-messages');
+
+            chatBubble.addEventListener('click', () => {
+                chatContainer.classList.remove('hidden');
+                setTimeout(() => {
+                    chatContainer.classList.remove('opacity-0', '-translate-y-2');
+                }, 10);
+            });
+
+            closeChat.addEventListener('click', () => {
+                chatContainer.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => {
+                    chatContainer.classList.add('hidden');
+                }, 300);
+            });
+
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message', sender, 'self-start', 'rounded-lg', 'p-3', 'fade-in');
+                messageElement.textContent = text;
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingElement = document.createElement('div');
+                typingElement.id = 'typing-indicator';
+                typingElement.classList.add('chat-message', 'ai', 'self-start', 'rounded-lg', 'p-3', 'flex', 'items-center', 'space-x-2');
+                typingElement.innerHTML = `
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>`;
+                chatMessages.appendChild(typingElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const typingElement = document.getElementById('typing-indicator');
+                if (typingElement) {
+                    typingElement.remove();
+                }
+            }
+
+            function handleSendMessage() {
+                const userMessage = chatInput.value.trim();
+                if (userMessage) {
+                    addMessage(userMessage, 'user');
+                    chatInput.value = '';
+                    showTypingIndicator();
+
+                    // Simulate AI response
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const aiResponse = getAIResponse(userMessage);
+                        addMessage(aiResponse, 'ai');
+                    }, 1500);
+                }
+            }
+
+            sendChat.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+
+            function getAIResponse(message) {
+                message = message.toLowerCase();
+                if (message.includes("price") || message.includes("cost")) {
+                    return "The MIXERA CTRL one is estimated to cost around 999€. We're aiming to provide professional features at an accessible price point.";
+                } else if (message.includes("release") || message.includes("available")) {
+                    return "We are in the final stages of prototyping. Sign up for our newsletter on the 'Products' page to get notified as soon as pre-orders are live!";
+                } else if (message.includes("motorized jog wheels")) {
+                    return "Yes! The CTRL one features motorized jog wheels for a true vinyl-like feel, perfect for scratching and precise beatmatching.";
+                } else if (message.includes("open source")) {
+                    return "Absolutely. Our software will be open-source, allowing the community to customize mappings, add features, and contribute to the ecosystem. You'll find everything on our 'Downloads' page after launch.";
+                } else if (message.includes("gofundme") || message.includes("support")) {
+                    return "You can support our project through the GoFundMe campaign, which is linked on the homepage. Your support helps us start production!";
+                } else {
+                    return "Thanks for your question! For more detailed information, I recommend checking out the different sections of our website or asking something more specific about our controller's features.";
+                }
+            }
+
+            // Scroll Animations
+            const animatedElements = document.querySelectorAll('.animated');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+
+</body>
+</html>
